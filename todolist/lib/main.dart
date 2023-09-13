@@ -12,12 +12,13 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        fontFamily: 'Poppins',
         primaryColor: const Color(0xFFFCFCFC),
         scaffoldBackgroundColor: const Color.fromRGBO(28, 28, 39, 1),
         highlightColor: const Color(0xFFFFB43A),
         cardColor: const Color.fromRGBO(39, 40, 51, 1),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromRGBO(24, 24, 33, 1), // o:1
+          backgroundColor: Color.fromRGBO(24, 24, 33, 1),
           foregroundColor: Color(0xFFFCFCFC),
         ),
         textTheme: const TextTheme(
@@ -29,6 +30,7 @@ class App extends StatelessWidget {
           ),
         ),
       ),
+      themeMode: ThemeMode.system,
       home: const HomeScreen(),
     );
   }

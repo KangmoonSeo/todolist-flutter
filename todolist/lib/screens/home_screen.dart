@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:todolist/services/todo_serivce.dart';
 import 'package:todolist/widgets/state_list_widget.dart';
 import 'package:todolist/widgets/todolist_widget%20.dart';
@@ -13,12 +14,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _textController = TextEditingController();
+  Logger log = Logger();
 
   void onSubmitted(String text) {
+    if (text == "") {
+      // alert it is blank
+      return;
+    }
     _textController.clear();
     setState(() {
       TodoService.addTodo(text);
     });
+    log.i("todo added: $text");
   }
 
   @override
@@ -37,13 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const StateList(),
-          const SizedBox(
-            height: 40,
-          ),
-          Flexible(
+          const SizedBox(height: 40),
+          Expanded(
             child: TodoList(),
           ),
           addTodo(context),
@@ -63,34 +67,33 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           children: [
             Flexible(
-              child: Container(
-                child: TextField(
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  controller: _textController,
-                  onSubmitted: onSubmitted,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).highlightColor,
-                        style: BorderStyle.solid,
-                      ),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Theme.of(context).highlightColor,
-                        style: BorderStyle.solid,
-                      ),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                    hintStyle: TextStyle(
+              child: TextField(
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
+                controller: _textController,
+                onSubmitted: onSubmitted,
+                decoration: InputDecoration(
+                  focusColor: Theme.of(context).highlightColor.withOpacity(0.3),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
                       color: Theme.of(context).highlightColor,
+                      style: BorderStyle.solid,
                     ),
-                    hintText: "Add Task...",
+                    borderRadius: BorderRadius.circular(40),
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).highlightColor,
+                      style: BorderStyle.solid,
+                    ),
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).highlightColor,
+                  ),
+                  hintText: "Add Task...",
                 ),
               ),
             ),
