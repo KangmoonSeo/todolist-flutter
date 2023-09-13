@@ -9,11 +9,12 @@ To-Do List App using Flutter
 - 기본 UI 설계 
 - To-do 추가 
 
-- 현재 HomeScreen이 AddTodo와 TodoList를 자식으로 가지고 있는 상황인데,
-AddTodo에서 변경한 데이터를 TodoList로 넘기기 위해서는 두 가지 방법이 있습니다.
-1. 상태 관리 라이브러리를 사용 (GetX 등)
-2. HomeScreen을 Stateful로 만들어 HomeScreen build 관련  메서드를 AddTodo에게 전달
-Day 2 에서 두 해결 방안 중 하나를 선택해 기능을 완성하겠습니다.
+--- 
+- 현재 HomeScreen이 AddTodo와 TodoList를 자식으로 가지고 있는 상황입니다.
+-  이때 AddTodo Widget에서 변경한 데이터를 TodoList Widget로 넘기기 위해 두 가지 방법을 고려하고 있습니다. 
+    1. 상태 관리 라이브러리를 사용 (GetX 등)
+    2. HomeScreen을 Stateful로 만들어 HomeScreen build 관련 메서드를 AddTodo에게 전달
+- Day 2 에서 두 방법 중 하나를 선택해 기능을 완성하겠습니다.
 
 ---
 ## Day 2
