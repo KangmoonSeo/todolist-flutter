@@ -13,11 +13,11 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         primaryColor: const Color(0xFFFCFCFC),
-        scaffoldBackgroundColor: const Color(0xFF272833),
+        scaffoldBackgroundColor: const Color.fromRGBO(28, 28, 39, 1),
         highlightColor: const Color(0xFFFFB43A),
         cardColor: const Color.fromRGBO(39, 40, 51, 1),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromRGBO(24, 33, 33, 0.3), // o:1
+          backgroundColor: Color.fromRGBO(24, 24, 33, 1), // o:1
           foregroundColor: Color(0xFFFCFCFC),
         ),
         textTheme: const TextTheme(

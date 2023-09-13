@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/widgets/add_todo_widget.dart';
-import 'package:todolist/widgets/state_selector_widget.dart';
+import 'package:todolist/services/todo_serivce.dart';
+import 'package:todolist/widgets/state_list_widget.dart';
 import 'package:todolist/widgets/todolist_widget%20.dart';
 
 // addTodoWidget에서 todoList
@@ -12,8 +12,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void updateScreen() {
-    setState(() {});
+  final TextEditingController _textController = TextEditingController();
+
+  void onSubmitted(String text) {
+    _textController.clear();
+    setState(() {
+      TodoService.addTodo(text);
+    });
   }
 
   @override
@@ -34,15 +39,78 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const StateSelector(),
+          const StateList(),
           const SizedBox(
             height: 40,
           ),
           Flexible(
             child: TodoList(),
           ),
-          AddTodo(updateParent: updateScreen),
+          addTodo(context),
         ],
+      ),
+    );
+  }
+
+  Padding addTodo(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 100,
+        vertical: 20,
+      ),
+      child: SizedBox(
+        height: 80,
+        child: Row(
+          children: [
+            Flexible(
+              child: Container(
+                child: TextField(
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  controller: _textController,
+                  onSubmitted: onSubmitted,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).highlightColor,
+                        style: BorderStyle.solid,
+                      ),
+                      borderRadius: BorderRadius.circular(40),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).highlightColor,
+                        style: BorderStyle.solid,
+                      ),
+                      borderRadius: BorderRadius.circular(40),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                    hintStyle: TextStyle(
+                      color: Theme.of(context).highlightColor,
+                    ),
+                    hintText: "Add Task...",
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).highlightColor,
+              ),
+              child: IconButton(
+                color: Theme.of(context).primaryColor,
+                iconSize: 30,
+                icon: const Icon(Icons.add),
+                onPressed: () => onSubmitted(_textController.text),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

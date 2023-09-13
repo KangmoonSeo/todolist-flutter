@@ -12,16 +12,18 @@ class TodoWidget extends StatefulWidget {
 class _TodoState extends State<TodoWidget> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 80,
       height: 40,
-      decoration: const BoxDecoration(
-        color: Colors.red,
-      ),
       child: Row(
         children: [
           const Icon(Icons.check_box_outline_blank),
-          Text(widget.text),
+          Text(
+            widget.text,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
           const Icon(Icons.star_border_outlined),
         ],
       ),
