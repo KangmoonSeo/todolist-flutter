@@ -54,3 +54,16 @@ To-Do List App using Flutter
 - Text Edit
     - 텍스트를 `longPress`하면 텍스트 수정 창이 팝업됩니다.
     - 팝업 창에 수정할 텍스트를 입력한 후 우측하단 버튼을 누르면 텍스트가 수정됩니다. 
+
+## Day 3
+
+### 구현 내용
+- `TabBarView`로 To-Do 상태에 따른 페이지 분리
+- 리팩터링
+    - Scaffold 구조 개선
+        - appbar, body, bottomNavigationBar로 나누어 구현
+            - appbar: Appbar (bottom: tabBar)
+            - body: TabBarView
+            - bottomNavigationBar: addTaskWidget
+    - `prefs` StorageService class로 분리
+        - todoRepository, todoList도 StorageService로 옮겨 관리할 예정입니다.
