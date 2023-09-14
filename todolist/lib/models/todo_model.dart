@@ -12,4 +12,21 @@ class TodoModel {
     required this.id,
     required this.order,
   });
+
+  TodoModel.fromJson(Map<String, dynamic> json)
+      : text = json['text'],
+        isCompleted = json['isCompleted'],
+        isImportant = json['isImportant'],
+        id = json['id'],
+        order = json['order'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'text': text,
+      'isCompleted': isCompleted,
+      'isImportant': isImportant,
+      'id': id,
+      'order': order,
+    };
+  }
 }

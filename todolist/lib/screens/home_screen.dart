@@ -1,62 +1,147 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:todolist/models/todo_model.dart';
+import 'package:todolist/services/storage_service.dart';
 import 'package:todolist/services/todo_serivce.dart';
-import 'package:todolist/widgets/state_list_widget.dart';
-import 'package:todolist/widgets/todolist_widget%20.dart';
+import 'package:todolist/widgets/todo_widget.dart';
+
+enum SelectType { all, completed, incompleted, important }
 
 // addTodoWidget에서 todoList
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _textController = TextEditingController();
-  Logger log = Logger();
+
+  final todoRepository = TodoService.getTodoRepository();
+  final todoList = TodoService.getTodoList();
+  final Logger log = Logger();
 
   void onSubmitted(String text) {
-    if (text == "") {
-      // alert it is blank
-      return;
-    }
+    if (text == "") return;
     _textController.clear();
     setState(() {
       TodoService.addTodo(text);
+      StorageService.store();
     });
-    log.i("todo added: $text");
+
+    log.i("todo added: $todoList , $todoRepository");
+  }
+
+  void deleteTodo(int todoId, int index) {
+    TodoModel todo = TodoService.findTodoById(todoId);
+    TodoService.deleteTodo(todo);
+
+    StorageService.store();
+  }
+
+  Future initPref() async {
+    setState(() {
+      StorageService.initApp();
+    });
+  }
+
+  @override
+  void initState() {
+    initPref();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        centerTitle: false,
-        foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        title: const Text(
-          "To-Do List",
-          style: TextStyle(
-            fontSize: 24,
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          title: const Text(
+            "To-Do List",
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          bottom: TabBar(
+            indicatorColor: Theme.of(context).highlightColor,
+            unselectedLabelColor: Theme.of(context).primaryColor,
+            labelColor: Theme.of(context).highlightColor,
+            labelPadding: const EdgeInsets.all(2),
+            tabs: const [
+              Tab(text: 'All'),
+              Tab(text: 'Completed'),
+              Tab(text: 'Incompleted'),
+              Tab(text: 'Important'),
+            ],
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          const StateList(),
-          const SizedBox(height: 40),
-          Expanded(
-            child: TodoList(),
-          ),
-          addTodo(context),
-        ],
+        body: TabBarView(
+          children: [
+            todoListBuilder(SelectType.all),
+            todoListBuilder(SelectType.completed),
+            todoListBuilder(SelectType.incompleted),
+            todoListBuilder(SelectType.important),
+          ],
+        ),
+        bottomNavigationBar: addTaskWidget(context),
       ),
     );
   }
 
-  Padding addTodo(BuildContext context) {
+  Widget todoListBuilder(type) {
+    var list = [];
+
+    for (var todoId in todoList) {
+      TodoModel todo = TodoService.findTodoById(todoId);
+      switch (type) {
+        case SelectType.all:
+          list.add(todoId);
+          break;
+        case SelectType.completed:
+          if (todo.isCompleted) list.add(todoId);
+          break;
+        case SelectType.incompleted:
+          if (!todo.isCompleted) list.add(todoId);
+          break;
+        case SelectType.important:
+          if (todo.isImportant) list.add(todoId);
+          break;
+      }
+    }
+
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 20,
+            ),
+            scrollDirection: Axis.vertical,
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              return Dismissible(
+                key: ValueKey(list[index]),
+                direction: DismissDirection.endToStart,
+                onDismissed: (direction) {
+                  deleteTodo(list[index], index);
+                },
+                child: TodoWidget(id: list[index]),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding addTaskWidget(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 100,
