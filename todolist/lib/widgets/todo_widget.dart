@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:todolist/models/todo_model.dart';
 import 'package:todolist/services/todo_serivce.dart';
-import 'package:flutter/src/widgets/gesture_detector.dart' as gd;
 
 class TodoWidget extends StatefulWidget {
-  final Function changeParent;
+  final Function buildScreen;
   final int id;
-  const TodoWidget({super.key, required this.id, required this.changeParent});
+  const TodoWidget({super.key, required this.id, required this.buildScreen});
 
   @override
   State<TodoWidget> createState() => _TodoState();
@@ -20,24 +19,24 @@ class _TodoState extends State<TodoWidget> {
   late TextEditingController _textController;
   final Logger log = Logger();
 
-  tapCheckbox() {
+  void tapCheckbox() {
     setState(() {
       TodoService.toggleCompleted(todo);
-      widget.changeParent();
+      widget.buildScreen();
     });
   }
 
-  tapStar() {
+  void tapStar() {
     setState(() {
       TodoService.toggleImportant(todo);
-      widget.changeParent();
+      widget.buildScreen();
     });
   }
 
   void updateText(text) {
     setState(() {
       TodoService.updateTodo(todo, text);
-      widget.changeParent();
+      widget.buildScreen();
     });
   }
 
@@ -59,7 +58,7 @@ class _TodoState extends State<TodoWidget> {
       ),
       child: Row(
         children: [
-          gd.GestureDetector(
+          GestureDetector(
             onTap: tapCheckbox,
             child: SizedBox(
               width: 60,
@@ -71,7 +70,7 @@ class _TodoState extends State<TodoWidget> {
             ),
           ),
           Expanded(
-            child: gd.GestureDetector(
+            child: GestureDetector(
               onTap: tapCheckbox,
               onLongPress: () {
                 _textController = TextEditingController(text: todo.text);
@@ -108,7 +107,7 @@ class _TodoState extends State<TodoWidget> {
               ),
             ),
           ),
-          gd.GestureDetector(
+          GestureDetector(
             onTap: tapStar,
             child: SizedBox(
               width: 60,

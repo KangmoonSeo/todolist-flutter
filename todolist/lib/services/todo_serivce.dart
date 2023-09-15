@@ -6,11 +6,10 @@ import 'package:todolist/services/storage_service.dart';
 class TodoService {
   static final List<TodoModel> _todoRepository = [];
   static final List<int> _todoList = [];
-
-  static int sequence = 1000;
+  static int _sequence = 1000;
 
   static void loadSequence(int s) {
-    sequence = s;
+    _sequence = s;
   }
 
   static List<TodoModel> getTodoRepository() {
@@ -39,8 +38,8 @@ class TodoService {
       text: text,
       isCompleted: false,
       isImportant: false,
-      id: ++sequence,
-      order: sequence,
+      id: ++_sequence,
+      order: _sequence,
     );
     _todoRepository.add(todoModel);
     _todoList.add(todoModel.id);
@@ -50,9 +49,7 @@ class TodoService {
 
   static TodoModel findTodoById(int id) {
     for (var todo in _todoRepository) {
-      if (todo.id == id) {
-        return todo;
-      }
+      if (todo.id == id) return todo;
     }
     throw ArgumentError;
   }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:todolist/models/todo_model.dart';
 import 'package:todolist/services/storage_service.dart';
 import 'package:todolist/services/todo_serivce.dart';
+import 'package:todolist/widgets/add_task_widget.dart';
 import 'package:todolist/widgets/todo_widget.dart';
 
 enum SelectType { all, completed, incompleted, important }
@@ -15,28 +15,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _textController = TextEditingController();
-  final Logger log = Logger();
-
-  // sends function for children
-  void change() {
+  // sends props to children
+  void props() {
     setState(() {});
-  }
-
-  void onSubmitted(String text) {
-    if (text == "") return;
-    _textController.clear();
-    setState(() {
-      TodoService.addTodo(text);
-    });
   }
 
   @override
   void initState() {
-    setState(() {
-      StorageService.initApp();
-      super.initState();
-    });
+    StorageService.initApp().then((value) => {setState(() {})});
+    super.initState();
   }
 
   @override
@@ -75,30 +62,20 @@ class _HomeScreenState extends State<HomeScreen> {
             todoListBuilder(SelectType.important),
           ],
         ),
-        bottomNavigationBar: addTaskWidget(context),
+        bottomNavigationBar: AddTask(buildScreen: props),
       ),
     );
   }
 
   Widget todoListBuilder(type) {
-    var list = [];
+    List<int> list = [];
 
     for (var todoId in TodoService.getTodoList()) {
       TodoModel todo = TodoService.findTodoById(todoId);
-      switch (type) {
-        case SelectType.all:
-          list.add(todoId);
-          break;
-        case SelectType.completed:
-          if (todo.isCompleted) list.add(todoId);
-          break;
-        case SelectType.incompleted:
-          if (!todo.isCompleted) list.add(todoId);
-          break;
-        case SelectType.important:
-          if (todo.isImportant) list.add(todoId);
-          break;
-      }
+      if (type == SelectType.all && true) list.add(todoId);
+      if (type == SelectType.completed && todo.isCompleted) list.add(todoId);
+      if (type == SelectType.incompleted && !todo.isCompleted) list.add(todoId);
+      if (type == SelectType.important && todo.isImportant) list.add(todoId);
     }
 
     return Column(
@@ -119,79 +96,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
                   TodoService.deleteTodo(TodoService.findTodoById(list[index]));
-                  change();
+                  setState(() {});
                 },
                 child: TodoWidget(
                   id: list[index],
-                  changeParent: change,
+                  buildScreen: props,
                 ),
               );
             },
           ),
         ),
       ],
-    );
-  }
-
-  Padding addTaskWidget(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 100,
-        vertical: 20,
-      ),
-      child: SizedBox(
-        height: 80,
-        child: Row(
-          children: [
-            Flexible(
-              child: TextField(
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-                controller: _textController,
-                onSubmitted: onSubmitted,
-                decoration: InputDecoration(
-                  focusColor: Theme.of(context).highlightColor.withOpacity(0.3),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).highlightColor,
-                      style: BorderStyle.solid,
-                    ),
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).highlightColor,
-                      style: BorderStyle.solid,
-                    ),
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-                  hintStyle: TextStyle(
-                    color: Theme.of(context).highlightColor,
-                  ),
-                  hintText: "Add Task...",
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).highlightColor,
-              ),
-              child: IconButton(
-                color: Theme.of(context).primaryColor,
-                iconSize: 30,
-                icon: const Icon(Icons.add),
-                onPressed: () => onSubmitted(_textController.text),
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }
