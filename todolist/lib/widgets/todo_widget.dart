@@ -13,8 +13,9 @@ class TodoWidget extends StatefulWidget {
 }
 
 class _TodoState extends State<TodoWidget> {
+  final TextEditingController _textController = TextEditingController();
   late TodoModel todo;
-  late TextEditingController _textController;
+
   final Logger log = Logger();
 
   void tapCheckbox() {
@@ -71,7 +72,7 @@ class _TodoState extends State<TodoWidget> {
             child: GestureDetector(
               onTap: tapCheckbox,
               onLongPress: () {
-                _textController = TextEditingController(text: todo.text);
+                _textController.text = todo.text;
                 showDialog(
                   context: context,
                   builder: ((context) => AlertDialog(

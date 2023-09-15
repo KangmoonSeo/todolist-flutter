@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/models/todo_model.dart';
 import 'package:todolist/services/storage_service.dart';
+import 'package:todolist/services/storage_service_impl.dart';
 import 'package:todolist/services/todo_serivce.dart';
 import 'package:todolist/widgets/add_task_widget.dart';
 import 'package:todolist/widgets/todo_widget.dart';
@@ -14,6 +15,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final StorageService storageService = StorageServiceImpl.getInstance();
+
   // send props to children
   void props() {
     setState(() {});
@@ -21,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    StorageService.initApp().then((value) => {setState(() {})});
+    storageService.initApp().then((value) => {setState(() {})});
     super.initState();
   }
 

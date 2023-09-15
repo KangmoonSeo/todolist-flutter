@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:todolist/models/todo_model.dart';
 import 'package:todolist/services/storage_service.dart';
+import 'package:todolist/services/storage_service_impl.dart';
 
 class TodoService {
   static final List<TodoModel> _todoRepository = [];
   static final List<int> _todoList = [];
+  static final StorageService _storageService =
+      StorageServiceImpl.getInstance();
   static int _sequence = 1000;
 
   static void loadSequence(int s) {
@@ -43,7 +46,7 @@ class TodoService {
     _todoRepository.add(todoModel);
     _todoList.add(todoModel.id);
 
-    StorageService.store(); // Transactional
+    _storageService.store(); // Transactional
   }
 
   static TodoModel findTodoById(int id) {
@@ -56,27 +59,27 @@ class TodoService {
   static void updateTodo(TodoModel todo, String text) {
     todo.text = text;
 
-    StorageService.store(); // Transactional
+    _storageService.store(); // Transactional
   }
 
   static void deleteTodo(TodoModel todo) {
     _todoList.remove(todo.id);
     _todoRepository.remove(todo);
 
-    StorageService.store(); // Transactional
+    _storageService.store(); // Transactional
   }
 
   // important
   static void toggleImportant(TodoModel todo) {
     todo.isImportant = !todo.isImportant;
 
-    StorageService.store(); // Transactional
+    _storageService.store(); // Transactional
   }
 
   // completed
   static void toggleCompleted(TodoModel todo) {
     todo.isCompleted = !todo.isCompleted;
 
-    StorageService.store(); // Transactional
+    _storageService.store(); // Transactional
   }
 }
