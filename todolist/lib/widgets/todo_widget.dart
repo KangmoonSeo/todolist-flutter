@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todolist/models/todo_model.dart';
 import 'package:todolist/services/todo_serivce.dart';
 import 'package:flutter/src/widgets/gesture_detector.dart' as gd;
 
 class TodoWidget extends StatefulWidget {
+  final Function changeParent;
   final int id;
-  const TodoWidget({super.key, required this.id});
+  const TodoWidget({super.key, required this.id, required this.changeParent});
 
   @override
   State<TodoWidget> createState() => _TodoState();
@@ -18,44 +18,33 @@ class TodoWidget extends StatefulWidget {
 class _TodoState extends State<TodoWidget> {
   late TodoModel todo;
   late TextEditingController _textController;
-  late final SharedPreferences prefs;
-  late List<TodoModel> todoRepository;
   final Logger log = Logger();
-
-  Future initPref() async {
-    prefs = await SharedPreferences.getInstance();
-    todoRepository = TodoService.getTodoRepository();
-  }
 
   tapCheckbox() {
     setState(() {
       TodoService.toggleCompleted(todo);
-      prefs.setStringList(
-          "todoRepository", TodoService.toStringList(todoRepository));
+      widget.changeParent();
     });
   }
 
   tapStar() {
     setState(() {
       TodoService.toggleImportant(todo);
-      prefs.setStringList(
-          "todoRepository", TodoService.toStringList(todoRepository));
+      widget.changeParent();
     });
   }
 
   void updateText(text) {
     setState(() {
       TodoService.updateTodo(todo, text);
-      prefs.setStringList(
-          "todoRepository", TodoService.toStringList(todoRepository));
+      widget.changeParent();
     });
   }
 
   @override
   void initState() {
-    initPref();
-    super.initState();
     todo = TodoService.findTodoById(widget.id);
+    super.initState();
   }
 
   @override
@@ -96,7 +85,7 @@ class _TodoState extends State<TodoWidget> {
                         actions: [
                           IconButton(
                             iconSize: 30,
-                            icon: const Icon(Icons.add),
+                            icon: const Icon(Icons.menu_book_outlined),
                             onPressed: () => {
                               updateText(_textController.text),
                               Navigator.pop(context),

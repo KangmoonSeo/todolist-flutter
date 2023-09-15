@@ -16,39 +16,27 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _textController = TextEditingController();
-
-  final todoRepository = TodoService.getTodoRepository();
-  final todoList = TodoService.getTodoList();
   final Logger log = Logger();
+
+  // sends function for children
+  void change() {
+    setState(() {});
+  }
 
   void onSubmitted(String text) {
     if (text == "") return;
     _textController.clear();
     setState(() {
       TodoService.addTodo(text);
-      StorageService.store();
-    });
-
-    log.i("todo added: $todoList , $todoRepository");
-  }
-
-  void deleteTodo(int todoId, int index) {
-    TodoModel todo = TodoService.findTodoById(todoId);
-    TodoService.deleteTodo(todo);
-
-    StorageService.store();
-  }
-
-  Future initPref() async {
-    setState(() {
-      StorageService.initApp();
     });
   }
 
   @override
   void initState() {
-    initPref();
-    super.initState();
+    setState(() {
+      StorageService.initApp();
+      super.initState();
+    });
   }
 
   @override
@@ -95,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget todoListBuilder(type) {
     var list = [];
 
-    for (var todoId in todoList) {
+    for (var todoId in TodoService.getTodoList()) {
       TodoModel todo = TodoService.findTodoById(todoId);
       switch (type) {
         case SelectType.all:
@@ -130,9 +118,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 key: ValueKey(list[index]),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
-                  deleteTodo(list[index], index);
+                  TodoService.deleteTodo(TodoService.findTodoById(list[index]));
+                  change();
                 },
-                child: TodoWidget(id: list[index]),
+                child: TodoWidget(
+                  id: list[index],
+                  changeParent: change,
+                ),
               );
             },
           ),

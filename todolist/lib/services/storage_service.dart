@@ -14,14 +14,17 @@ class StorageService {
     _todoRepository = TodoService.getTodoRepository();
     _todoList = TodoService.getTodoList();
 
+    // get data from localStorage
     List<String>? list = _prefs.getStringList('todoList');
     list ??= [];
-    List<String>? repo = _prefs.getStringList('todoRepository'); // List<String>
+    List<String>? repo = _prefs.getStringList('todoRepository');
     var sequence = _prefs.getInt('sequence');
     if (list.isEmpty) {
       repo = [];
       sequence = 1000;
     }
+
+    // sync data at memory
     TodoService.loadSequence(sequence!);
     for (var intString in list) {
       _todoList.add(int.parse(intString));
@@ -32,6 +35,7 @@ class StorageService {
     }
   }
 
+  // store memory data in localStorage
   static store() {
     _prefs.setStringList("todoList", TodoService.toStringList(_todoList));
     _prefs.setStringList(
