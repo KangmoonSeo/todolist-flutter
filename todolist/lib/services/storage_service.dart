@@ -17,22 +17,21 @@ class StorageService {
     _todoList = TodoService.getTodoList();
 
     // get data from localStorage
-    List<String>? list = _prefs.getStringList('todoList');
-    list ??= [];
-    List<String>? repo = _prefs.getStringList('todoRepository');
+    List<String> list = _prefs.getStringList('todoList') ?? [];
+    List<String> repo = _prefs.getStringList('todoRepository') ?? [];
     var sequence = _prefs.getInt('sequence');
     if (list.isEmpty) {
       repo = [];
       sequence = 1000;
     }
-    _log.i("[storage load] list:${list.length}, repo:${repo?.length}");
+    _log.i("[storage load] list:${list.length}, repo:${repo.length}");
 
     // sync data at memory
     TodoService.loadSequence(sequence!);
     for (var intString in list) {
       _todoList.add(int.parse(intString));
     }
-    for (var jsonString in repo!) {
+    for (var jsonString in repo) {
       Map<String, dynamic> m = jsonDecode(jsonString);
       _todoRepository.add(TodoModel.fromJson(m));
     }

@@ -7,7 +7,6 @@ import 'package:todolist/widgets/todo_widget.dart';
 
 enum SelectType { all, completed, incompleted, important }
 
-// addTodoWidget에서 todoList
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   @override
@@ -15,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // sends props to children
+  // send props to children
   void props() {
     setState(() {});
   }
@@ -37,9 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: const Text(
             "To-Do List",
-            style: TextStyle(
-              fontSize: 24,
-            ),
+            style: TextStyle(fontSize: 24),
           ),
           bottom: TabBar(
             indicatorColor: Theme.of(context).highlightColor,
@@ -62,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
             todoListBuilder(SelectType.important),
           ],
         ),
-        bottomNavigationBar: AddTask(buildScreen: props),
+        bottomNavigationBar: AddTaskWidget(buildScreen: props),
       ),
     );
   }

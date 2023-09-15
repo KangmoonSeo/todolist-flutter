@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/services/todo_serivce.dart';
 
-class AddTask extends StatefulWidget {
+class AddTaskWidget extends StatefulWidget {
   final Function buildScreen;
-  const AddTask({super.key, required this.buildScreen});
+  const AddTaskWidget({super.key, required this.buildScreen});
 
   @override
-  State<AddTask> createState() => _AddTaskState();
+  State<AddTaskWidget> createState() => _AddTaskWidgetState();
 }
 
-class _AddTaskState extends State<AddTask> {
+class _AddTaskWidgetState extends State<AddTaskWidget> {
   final TextEditingController _textController = TextEditingController();
 
   void onSubmitted(String text) {

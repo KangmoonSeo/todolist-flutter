@@ -1,6 +1,6 @@
 # To-Do List using Flutter
 - 다음 디자인을 양식으로 앱을 구현합니다. 
-    - https://www.behance.net/gallery/127460643/TO-DO-List?tracking_source=search_projects_views|todolist
+    - https://www.behance.net/gallery/127460643/TO-DO-List?tracking_source=search_projects_views|
 
 ## 개요 
 - 9/12(화) ~ 9/17(일), 총 6일 동안 두 파트로 나누어 제작합니다.

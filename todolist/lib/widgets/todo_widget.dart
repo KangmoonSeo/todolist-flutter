@@ -1,5 +1,3 @@
-// ignore_for_file: implementation_imports
-
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:todolist/models/todo_model.dart';
