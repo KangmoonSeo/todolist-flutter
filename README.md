@@ -1,5 +1,6 @@
 # To-Do List App - KangmoonSeo
 To-Do List App using Flutter
+
 URL : https://kangmoonseo.github.io/web/
 
 ---
@@ -76,6 +77,9 @@ URL : https://kangmoonseo.github.io/web/
     - localStorage 관리 부분 `StorageService`로 완전 분리
     - AddTask 위젯 분리
     - StorageService 메서드 로그 추가
+    - StorageService 추상 클래스로 변경
+        - storage가 교체되는 사용하는 상황 고려
+    - StorageServiceImpl 클래스 싱글톤으로 추가
 - 버그 수정
     - 앱 첫 진입 시 데이터가 로딩되지 않는 문제
         - `initApp` 비동기 데이터 초기화 이후 `.then()`으로 화면 렌더링 호출
