@@ -67,3 +67,16 @@ To-Do List App using Flutter
             - bottomNavigationBar: addTaskWidget
     - `prefs` StorageService class로 분리
         - todoRepository, todoList도 StorageService로 옮겨 관리할 예정입니다.
+
+## Day 4
+
+### 구현 내용
+- 리팩터링
+    - localStorage 관리 부분 `StorageService`로 완전 분리
+    - AddTask 위젯 분리
+    - StorageService 메서드 로그 추가
+- 버그 수정
+    - 앱 첫 진입 시 데이터가 로딩되지 않는 문제
+        - `initApp` 비동기 데이터 초기화 이후 `.then()`으로 화면 렌더링 호출
+    - Important, Completed 속성 변경 시 간헐적으로 적용되지 않는 문제
+        - `StorageService.store()` 호출하여 안정성 개선
