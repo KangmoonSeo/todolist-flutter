@@ -38,7 +38,7 @@ class StorageServiceImpl implements StorageService {
     _log.i("[storage load] list:${list.length}, repo:${repo.length}");
 
     // sync data at memory
-    TodoService.loadSequence(sequence!);
+    TodoService.setSequence(sequence!);
     for (var intString in list) {
       _todoList.add(int.parse(intString));
     }

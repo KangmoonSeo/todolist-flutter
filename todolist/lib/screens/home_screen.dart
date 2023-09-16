@@ -4,6 +4,7 @@ import 'package:todolist/services/storage_service.dart';
 import 'package:todolist/services/storage_service_impl.dart';
 import 'package:todolist/services/todo_serivce.dart';
 import 'package:todolist/widgets/add_task_widget.dart';
+import 'package:todolist/widgets/setting_widget.dart';
 import 'package:todolist/widgets/todo_widget.dart';
 
 enum SelectType { all, completed, incompleted, important }
@@ -37,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: false,
           foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          actions: [SettingWidget(buildScreen: props)],
           title: const Text(
             "To-Do List",
             style: TextStyle(fontSize: 24),
