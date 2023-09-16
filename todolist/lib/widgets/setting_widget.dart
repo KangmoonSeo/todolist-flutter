@@ -3,19 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:rotating_icon_button/rotating_icon_button.dart';
 import 'package:todolist/services/todo_serivce.dart';
 
-class SettingWidget extends StatefulWidget {
+class SettingWidget extends StatelessWidget {
   final Function buildScreen;
-  const SettingWidget({super.key, required this.buildScreen});
+  SettingWidget({super.key, required this.buildScreen});
 
-  @override
-  State<SettingWidget> createState() => _SettingWidgetState();
-}
-
-class _SettingWidgetState extends State<SettingWidget> {
-  void copyBackup() {
-    final String str = TodoService.getBackupData();
-
-    Clipboard.setData(ClipboardData(text: str));
+  void copyBackup(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: TodoService.getBackupData()));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Code copied to your Clipboard."),
@@ -26,15 +19,15 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   final TextEditingController _textController = TextEditingController();
 
-  void restoreData() {
+  void restoreData(BuildContext context) {
     if (TodoService.setDataByBackupCode(_textController.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Restore Completed"),
+          content: Text("Restore Completed."),
           duration: Duration(seconds: 5),
         ),
       );
-      widget.buildScreen();
+      buildScreen();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -45,7 +38,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     }
   }
 
-  void onBackupTap() {
+  void onBackupTap(BuildContext context) {
     _textController.text = "";
     showDialog(
         context: context,
@@ -74,7 +67,9 @@ class _SettingWidgetState extends State<SettingWidget> {
                             ),
                             const SizedBox(height: 10),
                             ElevatedButton(
-                              onPressed: copyBackup,
+                              onPressed: () {
+                                copyBackup(context);
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     Colors.green.withOpacity(0.8), // 초록색 버튼
@@ -118,7 +113,9 @@ class _SettingWidgetState extends State<SettingWidget> {
                             ),
                             const SizedBox(height: 10),
                             ElevatedButton(
-                              onPressed: restoreData,
+                              onPressed: () {
+                                restoreData(context);
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     Colors.green.withOpacity(0.8), // 초록색 버튼
@@ -139,7 +136,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             )));
   }
 
-  void onResetTap() {
+  void onResetTap(BuildContext context) {
     showDialog(
         context: context,
         builder: ((context) => AlertDialog(
@@ -149,7 +146,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                 TextButton(
                   onPressed: () {
                     TodoService.clearData();
-                    widget.buildScreen();
+                    buildScreen();
                     Navigator.of(context).pop();
                   },
                   child: const Text(
@@ -170,7 +167,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             )));
   }
 
-  void onSettingTap() {
+  void onSettingTap(BuildContext context) {
     showDialog(
       context: context,
       builder: ((context) => AlertDialog(
@@ -191,7 +188,9 @@ class _SettingWidgetState extends State<SettingWidget> {
                         style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
                       ElevatedButton(
-                        onPressed: onBackupTap,
+                        onPressed: () {
+                          onBackupTap(context);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               Colors.green.withOpacity(0.8), // 초록색 버튼
@@ -210,7 +209,9 @@ class _SettingWidgetState extends State<SettingWidget> {
                         style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
                       ElevatedButton(
-                        onPressed: onResetTap,
+                        onPressed: () {
+                          onResetTap(context);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               Colors.red.withOpacity(0.8), // 빨간색 버튼
@@ -232,7 +233,9 @@ class _SettingWidgetState extends State<SettingWidget> {
   @override
   Widget build(BuildContext context) {
     return RotatingIconButton(
-      onTap: onSettingTap,
+      onTap: () {
+        onSettingTap(context);
+      },
       padding: const EdgeInsets.symmetric(horizontal: 20),
       background: Colors.transparent,
       elevation: 10,
