@@ -1,7 +1,7 @@
 # To-Do List App - KangmoonSeo
 To-Do List App using Flutter
 
-URL : https://kangmoonseo.github.io/web/
+URL : https://kangmoonseo.github.io/web/todolist/
 
 ---
 ## Day 1
