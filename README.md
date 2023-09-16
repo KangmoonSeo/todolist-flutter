@@ -57,6 +57,7 @@ URL : https://kangmoonseo.github.io/web/
     - 텍스트를 `longPress`하면 텍스트 수정 창이 팝업됩니다.
     - 팝업 창에 수정할 텍스트를 입력한 후 우측하단 버튼을 누르면 텍스트가 수정됩니다. 
 
+---
 ## Day 3
 
 ### 구현 내용
@@ -70,6 +71,7 @@ URL : https://kangmoonseo.github.io/web/
     - `prefs` StorageService class로 분리
         - todoRepository, todoList도 StorageService로 옮겨 관리할 예정입니다.
 
+--- 
 ## Day 4
 
 ### 구현 내용
@@ -85,3 +87,24 @@ URL : https://kangmoonseo.github.io/web/
         - `initApp` 비동기 데이터 초기화 이후 `.then()`으로 화면 렌더링 호출
     - Important, Completed 속성 변경 시 간헐적으로 적용되지 않는 문제
         - `StorageService.store()` 호출하여 안정성 개선
+
+--- 
+## Day 5
+
+### 구현 내용
+- Setting Widget 추가
+    - `rotating_icon_button`으로 버튼을 눌렀을 때 아이콘이 회전하도록 시각화
+    - 다음 기능을 포함하고 있습니다. 
+        - 백업 및 복원
+        - 앱 데이터 초기화
+- 앱 데이터 초기화
+    - 아주 깔끔해집니다.
+- 백업 및 복원 구현
+    - 백업 버튼을 누르면 사용자의 클립보드에 Backup code를 전달합니다. 
+        - 먼저 현재 data를 `Map<String, dynamic>`에 담습니다.
+        - 이후 Map을 String 형태로 변환하고, 사용자의 클립보드에 전달합니다. 
+    - 복원에서는 사용자가 Backup code를 붙여넣으면 데이터를 코드와 동기화합니다. 
+        - TodoService에서 code를 분석, 적절한 형식의 데이터면 `Map<String, dynamic>`으로 나누어 현재 데이터와 동기화합니다.
+        - 데이터가 형식에 맞지 않으면 잘못된 Code임을 사용자에게 메시지로 전달합니다. 
+
+---
