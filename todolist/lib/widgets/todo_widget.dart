@@ -1,48 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:todolist/models/todo_model.dart';
 import 'package:todolist/services/todo_serivce.dart';
 
-class TodoWidget extends StatefulWidget {
+class TodoWidget extends StatelessWidget {
   final Function buildScreen;
   final int id;
-  const TodoWidget({super.key, required this.id, required this.buildScreen});
+  TodoWidget({super.key, required this.id, required this.buildScreen});
 
-  @override
-  State<TodoWidget> createState() => _TodoState();
-}
-
-class _TodoState extends State<TodoWidget> {
   final TextEditingController _textController = TextEditingController();
-  late TodoModel todo;
-
-  final Logger log = Logger();
+  late final TodoModel todo = TodoService.findTodoById(id);
 
   void tapCheckbox() {
-    setState(() {
-      TodoService.toggleCompleted(todo);
-      widget.buildScreen();
-    });
+    TodoService.toggleCompleted(todo);
+    buildScreen();
   }
 
   void tapStar() {
-    setState(() {
-      TodoService.toggleImportant(todo);
-      widget.buildScreen();
-    });
+    TodoService.toggleImportant(todo);
+    buildScreen();
   }
 
-  void updateText(text) {
-    setState(() {
-      TodoService.updateTodo(todo, text);
-      widget.buildScreen();
-    });
-  }
-
-  @override
-  void initState() {
-    todo = TodoService.findTodoById(widget.id);
-    super.initState();
+  void updateText(BuildContext context) {
+    final String text = _textController.text;
+    TodoService.updateTodo(todo, text);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Todo edited."),
+        duration: Duration(seconds: 3),
+      ),
+    );
+    buildScreen();
   }
 
   @override
@@ -77,15 +64,13 @@ class _TodoState extends State<TodoWidget> {
                   context: context,
                   builder: ((context) => AlertDialog(
                         title: const Text("Edit To-Do"),
-                        content: TextField(
-                          controller: _textController,
-                        ),
+                        content: TextField(controller: _textController),
                         actions: [
                           IconButton(
                             iconSize: 30,
-                            icon: const Icon(Icons.menu_book_outlined),
+                            icon: const Icon(Icons.edit),
                             onPressed: () => {
-                              updateText(_textController.text),
+                              updateText(context),
                               Navigator.pop(context),
                             },
                           )
@@ -102,6 +87,8 @@ class _TodoState extends State<TodoWidget> {
                   fontSize: 18,
                   fontFamily: 'Poppins',
                   color: Theme.of(context).primaryColor,
+                  decorationColor: Theme.of(context).highlightColor,
+                  decorationThickness: 1.8,
                 ),
               ),
             ),
