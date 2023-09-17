@@ -19,15 +19,6 @@ class App extends StatelessWidget {
         cardColor: const Color.fromRGBO(39, 40, 51, 1),
         appBarTheme: const AppBarTheme(
           backgroundColor: Color.fromRGBO(24, 24, 33, 1),
-          foregroundColor: Color(0xFFFCFCFC),
-        ),
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            color: Color(0xFFFCFCFC),
-          ),
-          labelLarge: TextStyle(
-            backgroundColor: Color(0xFFE94141),
-          ),
         ),
       ),
       themeMode: ThemeMode.system,
