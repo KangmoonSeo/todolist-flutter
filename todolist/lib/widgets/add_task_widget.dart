@@ -12,10 +12,12 @@ class AddTaskWidget extends StatelessWidget {
     if (text == "") return;
     _textController.clear();
     TodoService.addTodo(text);
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Todo Added."),
-        duration: Duration(seconds: 5),
+        duration: Duration(seconds: 1, milliseconds: 30),
       ),
     );
     buildScreen();

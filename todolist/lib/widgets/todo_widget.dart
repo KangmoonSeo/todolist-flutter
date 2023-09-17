@@ -23,6 +23,8 @@ class TodoWidget extends StatelessWidget {
   void updateText(BuildContext context) {
     final String text = _textController.text;
     TodoService.updateTodo(todo, text);
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Todo edited."),

@@ -9,6 +9,8 @@ class SettingWidget extends StatelessWidget {
 
   void copyBackup(BuildContext context) {
     Clipboard.setData(ClipboardData(text: TodoService.getBackupData()));
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Code copied to your Clipboard."),
@@ -20,10 +22,13 @@ class SettingWidget extends StatelessWidget {
   final TextEditingController _textController = TextEditingController();
 
   void restoreData(BuildContext context) {
+    if (_textController.text == "") return;
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     if (TodoService.setDataByBackupCode(_textController.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Restore Completed."),
+          content: Text("Restore completed."),
           duration: Duration(seconds: 5),
         ),
       );
@@ -61,7 +66,7 @@ class SettingWidget extends StatelessWidget {
                         Column(
                           children: [
                             Text(
-                              "A One-Time Backup code is created and saved to the clipboard.",
+                              "A One-Time Backup code is created and saved to the Clipboard.",
                               style: TextStyle(
                                   color: Theme.of(context).primaryColor),
                             ),
@@ -148,6 +153,14 @@ class SettingWidget extends StatelessWidget {
                     TodoService.clearData();
                     buildScreen();
                     Navigator.of(context).pop();
+                    Navigator.of(context).pop(); // pop twice
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("App data has been reset."),
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
                   },
                   child: const Text(
                     "Yes",
@@ -205,7 +218,7 @@ class SettingWidget extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        "Delete All Data",
+                        "Delete all data",
                         style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
                       ElevatedButton(

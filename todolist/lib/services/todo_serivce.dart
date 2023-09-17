@@ -44,7 +44,7 @@ class TodoService {
       "sequence": _sequence.toString(),
     };
 
-    log.w("[Backup] Code is Delivered to User. ");
+    log.i("[Backup] Code is Delivered to User. ");
     return json.encode(m).toString();
   }
 
@@ -95,7 +95,7 @@ class TodoService {
     setSequence(1000);
     if (sequenceString != "") setSequence(int.parse(sequenceString));
 
-    log.w("[Restore] Restore Completed : $code ... ");
+    log.i("[Restore] Restore Completed : $code ... ");
     _storageService.store(); // Transactional
     return true;
   }
@@ -117,6 +117,13 @@ class TodoService {
       id: ++_sequence,
       order: _sequence,
     );
+    _todoRepository.add(todoModel);
+    _todoList.add(todoModel.id);
+
+    _storageService.store(); // Transactional
+  }
+
+  static void undoTodo(TodoModel todoModel) {
     _todoRepository.add(todoModel);
     _todoList.add(todoModel.id);
 
