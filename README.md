@@ -3,6 +3,29 @@ To-Do List App using Flutter
 
 URL : https://kangmoonseo.github.io/web/todolist/
 
+
+
+---
+## 구현 기능 정리 (Day 1 ~ Day 6)
+- 기본 기능
+    - To-do 추가
+    - To-do 삭제
+    - To-do 완료 여부, 중요 표시
+    - 상태에 따른 To-do 분류
+- 추가 기능
+    - 사용자에게 상호작용 메시지 전달
+        - 사용자와 앱의 상호작용 내용을 하단 메시지로 전달합니다. 
+    - To-do 편집
+        - To-do를 길게 눌러 수정이 가능합니다.
+    - Undo : To-do 복원
+        - To-do를 삭제했을 때 메시지의 Undo 버튼을 누르면 삭제한 To-do가 복원됩니다. 
+    - 설정 버튼
+        - 데이터 백업 
+            - 백업 코드가 되는 긴 문자열을 사용자에게 전달합니다. 
+        - 데이터 복원
+            - 백업 코드를 붙여넣으면 To-do 데이터가 복원됩니다. 
+            - 양식에 맞지 않는 코드를 사용자가 입력하면 잘못된 코드임을 알려줍니다. 
+        - 데이터 초기화
 ---
 ## Day 1
 
@@ -108,3 +131,23 @@ URL : https://kangmoonseo.github.io/web/todolist/
         - 데이터가 형식에 맞지 않으면 잘못된 Code임을 사용자에게 메시지로 전달합니다. 
 
 ---
+
+## Day 6
+
+### 구현 내용
+- 리팩터링
+    - TodoWidget StatelessWidget으로 리팩터링
+- 수정
+    - TodoService Backup/Restore 예외 핸들링 강화, 로그 추가
+        - FormatException, General Exception을 감지해 로그에 남깁니다. 
+    - ThemeData 간소화
+        - 안 쓰는 것들 없앴습니다. 
+    - Todo 취소선 highlightColor로 색상 변경
+- 기능 구현
+    - 전체 상호작용에 SnackBar 추가
+        - 아래 팝업으로 사용자가 어떤 상호작용을 했는지 알려줍니다.
+    - Todo 삭제 복원(Undo) 구현
+        - Undo 버튼을 누르면 삭제한 TodoModel이 그대로 복원됩니다.
+        - TodoModel를 복원했을 때 순서를 지켜주기 위해 빌드 단계에서 todolist를 정렬합니다. 
+
+--- 
