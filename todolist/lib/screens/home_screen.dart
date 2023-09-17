@@ -23,6 +23,28 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  void deleteTodo(int todoId) {
+    TodoModel todo = TodoService.findTodoById(todoId);
+
+    setState(() {
+      TodoService.deleteTodo(todo);
+    });
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("Todo removed."),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+            label: "Undo",
+            onPressed: () {
+              setState(() {
+                TodoService.undoTodo(todo);
+              });
+            }),
+      ),
+    );
+  }
+
   @override
   void initState() {
     storageService.initApp().then((value) => {setState(() {})});
@@ -71,8 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget todoListBuilder(type) {
     List<int> list = [];
-
-    for (var todoId in TodoService.getTodoList()) {
+    TodoService.getTodoList().sort();
+    for (int todoId in TodoService.getTodoList()) {
       TodoModel todo = TodoService.findTodoById(todoId);
       if (type == SelectType.all && true) list.add(todoId);
       if (type == SelectType.completed && todo.isCompleted) list.add(todoId);
@@ -96,9 +118,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return Dismissible(
                 key: ValueKey(list[index]),
                 direction: DismissDirection.endToStart,
+                background: null,
                 onDismissed: (direction) {
-                  TodoService.deleteTodo(TodoService.findTodoById(list[index]));
-                  setState(() {});
+                  deleteTodo(list[index]);
                 },
                 child: TodoWidget(
                   id: list[index],
