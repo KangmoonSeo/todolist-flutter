@@ -43,23 +43,32 @@ class TodoService {
       "todoRepository": json.encode(_todoRepository).toString(),
       "sequence": _sequence.toString(),
     };
+
+    log.w("[Backup] Code is Delivered to User. ");
     return json.encode(m).toString();
   }
 
   static bool setDataByBackupCode(String code) {
     late final Map<String, dynamic> m;
+    String? listString;
+    String? repoString;
+    String? sequenceString;
     try {
       m = json.decode(code);
-    } catch (e) {
-      log.w("wrong code detected: $code ...");
+      listString ??= m['todoList'];
+      repoString ??= m['todoRepository'];
+      sequenceString ??= m['sequence'];
+
+      if (listString == null || repoString == null || sequenceString == null) {
+        throw FormatException;
+      }
+    } on FormatException {
+      if (code.length > 20) code = code.substring(0, 20);
+      log.w("[Restore] Invalid Code Format Detected : $code ... ");
       return false;
-    }
-
-    String? listString = m['todoList'];
-    String? repoString = m['todoRepository'];
-    String? sequenceString = m['sequence'];
-
-    if (listString == null || repoString == null || sequenceString == null) {
+    } on Exception {
+      if (code.length > 20) code = code.substring(0, 20);
+      log.w("[Restore] Unexpected Exception Detected : $code ... ");
       return false;
     }
 
@@ -67,7 +76,8 @@ class TodoService {
     repoString = repoString.substring(1, repoString.length - 1);
 
     List<String> listParse = listString.split(',');
-    List<String> repoParse = repoString.split(RegExp(r',(?![","])'));
+    List<String> repoParse =
+        repoString.split(RegExp(r',(?![","])')); // , AND NOT ","
 
     _todoList.clear();
     if (listParse[0] != "") {
@@ -85,6 +95,7 @@ class TodoService {
     setSequence(1000);
     if (sequenceString != "") setSequence(int.parse(sequenceString));
 
+    log.w("[Restore] Restore Completed : $code ... ");
     _storageService.store(); // Transactional
     return true;
   }
