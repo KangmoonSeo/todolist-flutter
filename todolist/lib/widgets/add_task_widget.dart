@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/services/todo_serivce.dart';
 
-class AddTaskWidget extends StatefulWidget {
+class AddTaskWidget extends StatelessWidget {
   final Function buildScreen;
-  const AddTaskWidget({super.key, required this.buildScreen});
+  AddTaskWidget({super.key, required this.buildScreen});
 
-  @override
-  State<AddTaskWidget> createState() => _AddTaskWidgetState();
-}
-
-class _AddTaskWidgetState extends State<AddTaskWidget> {
   final TextEditingController _textController = TextEditingController();
 
-  void onSubmitted(String text) {
+  void onSubmitted(BuildContext context) {
+    var text = _textController.text;
     if (text == "") return;
     _textController.clear();
-    setState(() {
-      TodoService.addTodo(text);
-    });
-    widget.buildScreen();
+    TodoService.addTodo(text);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Todo Added."),
+        duration: Duration(seconds: 5),
+      ),
+    );
+    buildScreen();
   }
 
   @override
@@ -31,6 +31,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
       child: SizedBox(
         height: 80,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
               child: TextField(
@@ -38,7 +39,9 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                   color: Theme.of(context).primaryColor,
                 ),
                 controller: _textController,
-                onSubmitted: onSubmitted,
+                onSubmitted: (text) {
+                  onSubmitted(context);
+                },
                 decoration: InputDecoration(
                   focusColor: Theme.of(context).highlightColor.withOpacity(0.3),
                   focusedBorder: OutlineInputBorder(
@@ -75,7 +78,9 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                 color: Theme.of(context).primaryColor,
                 iconSize: 30,
                 icon: const Icon(Icons.add),
-                onPressed: () => onSubmitted(_textController.text),
+                onPressed: () {
+                  onSubmitted(context);
+                },
               ),
             )
           ],
